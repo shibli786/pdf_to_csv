@@ -56,7 +56,7 @@ class PdfToCsv
     
     
         def to_csv      
-            byebug     	
+                 	
            package = ::Axlsx::Package.new			
               workbook = package.workbook
              workbook.add_worksheet(name: "Transamerica Variable") do |sheet|
