@@ -50,5 +50,5 @@ test:
 production:
   <<: *default
   database: pdf_csv_production
-  username: ubuntu
+  username: root
   password: hrhk
