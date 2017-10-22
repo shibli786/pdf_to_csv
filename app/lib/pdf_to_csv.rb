@@ -1,0 +1,109 @@
+class PdfToCsv	
+    # require 'pdf-reader'
+    # require 'byebug'
+    # require 'axlsx'
+    # require 'date'
+    
+        def initialize(path, page)         
+            @reader = PDF::Reader.new(path)
+            @header=nil
+            @page=page.to_i
+            @matrix=prepare_data
+            
+        end
+    
+    
+    
+        def prepare_data
+            table=Array.new
+            flag=true
+            flag2=false
+            count=0 
+            @reader.pages.each_with_index do |page,i| 
+            break if i >= @page          
+            #(?!([a-zA-Z\-0-9]+))
+             #text   = page.text.gsub(/\n\s{1}+[0-9]{1}+,[0-9]\s{1}+/,'      ')
+            rows=page.text.split(/\n/)               
+            rows.each_with_index do|row,ind|
+                temp=row.split(/\s{2}+/)
+                if temp.length == 1 && temp[0].include?('-')
+                    #byebug
+                    flag2=true
+                    rows[ind+1].insert(0, temp[0]) if !rows[ind+1].nil?
+                    flag2=false;
+                end
+                 if temp.length >9
+                    puts temp
+                    temp.delete_at(1)     
+                 end          
+                if temp.length ==9
+                    table << temp unless (temp.empty?  || row.include?("Portfolio Name"))
+                    
+                end
+                if  flag && row.include?("Portfolio Name")
+                    non_standardized_header row
+                    flag=false
+                end
+               
+
+            end	      
+         end
+
+            
+            return table
+        end
+    
+        def non_standardized_header(row)
+            @header=row.split(/\s{2}+/).reject{|a|a.empty?}   
+            @header[1].insert(8,'--')
+            @header[1]=@header[1].split(/--/)
+            @header.insert(1,'Incep Date')
+            @header=@header.flatten
+        end
+    
+        def standardized_header
+            
+        end  
+
+
+        def to_csv      
+            package = ::Axlsx::Package.new			
+              workbook = package.workbook
+             workbook.add_worksheet(name: "Transamerica Variable") do |sheet|
+                sheet.add_row @header, :b=>true,:sz=>11
+                @matrix.each_with_index do |row,o_in|             
+                 r=row.reject{|a| a==""}
+                 next if validate_checks(r)
+                   r.each do |text|
+                        text.strip!	     		
+                        #text.gsub!(/\n/, ' ')
+                    end
+                    sheet.add_row r          
+                 end
+            end
+            file_name_path="public/#{get_name('output')}"
+            package.serialize(file_name_path)
+          return file_name_path
+        end
+
+
+        def get_name(name)
+            name+"_#{get_time_stamp}.xlsx"
+        end
+        def get_time_stamp
+           Time.now.strftime('%Y-%m-%d_%H-%M-%S')
+        end
+    
+        def validate_checks(r)
+            return r[0].length>70 || !r[1].nil? && r[1].length>70 
+            return false     
+        end
+    end
+    
+    
+ 
+    
+    
+    
+    
+        
