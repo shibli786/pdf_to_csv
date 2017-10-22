@@ -7,7 +7,7 @@ class PdfToCsvController < ApplicationController
             time_s=Time.now.strftime('%Y-%m-%d_%H-%M-%S')
             path = File.join("public/uploaded_#{time_s}.pdf")
             File.open(path, "wb") { |f| f.write(params[:pdf_file].read) }          
-            ob=::PdfToExcel.new(path,params[:num_of_page])
+            ob=::PdfToExcel.new(path,params[:num_of_page]) #check the code in app/lib/pdf_to_excel.rb
             csv_file=ob.to_csv
             send_file File.join(Rails.root, csv_file) 
         end   
