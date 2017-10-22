@@ -4,12 +4,24 @@
         PDF to CSV Generator
     </h1>
 
+<% flash.each do |key, value| %>
+    <div class="<%= flash_class(key) %>">
+      <%= value %>
+      <%= key %>
+    </div>
+<% end %>
+
+
     <div style="text-align:center;margin-top: 15%;">
       <form class="form-horizontal" action="pdf_to_csv/extract_data"  enctype="multipart/form-data" method="POST">
   <div class="form-group">
     <label class="control-label col-sm-2" for="email">Upload PDF File</label>
     <div class="col-sm-6">
-      <input type="file" class="form-control" name="pdf_file">
+      <input type="file" class="form-control" name="pdf_file" required>
+    </div>
+     <div class="col-sm-2">
+     <%=select_tag "num_of_page", options_for_select(get_num_list,4),:class=>'form-control',:required=>'required'%>
+
     </div>
   </div>
  
