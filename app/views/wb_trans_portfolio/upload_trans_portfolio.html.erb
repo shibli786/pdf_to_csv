@@ -49,6 +49,12 @@
     </nav>
 
     <div class="container">
+    <% flash.each do |key, value| %>
+                                <div class="<%= flash_class(key) %>">
+                                  <%= value %>
+                                  <%= key %>
+                                </div>
+                            <% end %>
         <div class="row">
             <div class="col-md-12">
                 

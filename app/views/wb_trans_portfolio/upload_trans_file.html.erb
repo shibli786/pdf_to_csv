@@ -31,6 +31,13 @@
                 </nav>
 
                <div class="container">
+                <% flash.each do |key, value| %>
+                                <div class="<%= flash_class(key) %>">
+                                  <%= value %>
+                                  <%= key %>
+                                </div>
+                            <% end %>
+
                <p>
                   <h2>Upload Files</h2>
                </p>

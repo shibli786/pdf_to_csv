@@ -6,8 +6,16 @@ class WbTransPortfolioController < ApplicationController
         else
         	uploaded_file = params[:trans_portfolio_index][:file].tempfile	
             process_file uploaded_file         
-            process_trans_portfolio_index       
+            flag = process_trans_portfolio_index 
+            if flag
+            	flash[:success] = 'File Uploaded successfully'
+            else
+            	flash[:error] = 'Some error occured please try Again'
+
+            end      
         end
+        
+        render 'upload_trans_file'
 	end 
 
 	def upload_trans_portfolio	
@@ -16,7 +24,14 @@ class WbTransPortfolioController < ApplicationController
         else
        	   uploaded_file = params[:trans_portfolio][:file].tempfile	
            process_file uploaded_file
-           @data = process_trans_portfolio     
+           @data = process_trans_portfolio
+           if !@data.nil?
+            	flash[:success] = 'File Uploaded successfully'
+            else
+            	flash[:error] = 'Some error occured please try Again'
+
+            end  
+
     	end
     end
 
@@ -64,7 +79,8 @@ class WbTransPortfolioController < ApplicationController
     end
 
     private
-	def process_trans_portfolio_index	
+	def process_trans_portfolio_index
+		flag=true	
 	   (0..@file.last_row).each do |i|
 	      row = @file.row(i)
 	      logger.info "  Uploading Transamerica portfolio Index #{row}"
@@ -74,12 +90,14 @@ class WbTransPortfolioController < ApplicationController
 		        	port_index.name=row[0].strip
 		        	port_index.status=true
 		        	port_index.last_date_updated=Time.zone.now
-		        	port_index.save
+		        	flag = port_index.save
 				end
 				rescue Exception => e
-		        logger.info "validate record #{e.message}"	        
+		        logger.info "validate record #{e.message}"	
+		        flag=false        
 	     	end
 		end
+		return flag
 	end
 
 
@@ -102,7 +120,8 @@ class WbTransPortfolioController < ApplicationController
 		        	data[i-2].flatten!	
 				end
 				rescue Exception => e
-		        logger.info "validate record #{e.message}"	        
+		        logger.info "validate record #{e.message}"
+		        data = nil	        
 	     	end
 		end
 		data
