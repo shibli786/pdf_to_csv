@@ -1,0 +1,6 @@
+<% if !@sub_account_index.errors.any?%>
+$('#edit_subaccount_form').css('display','none');
+$("#sub_account_id_<%=@row_id%>").removeClass('sub_account_not_found');
+$("#sub_account_id_<%=@row_id%>").addClass('sub_account_found');
+$($("#sub_account_id_<%=@row_id%>").children()[0]).html('OK')
+<%end%>

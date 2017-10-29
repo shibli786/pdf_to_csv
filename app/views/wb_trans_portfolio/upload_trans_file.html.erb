@@ -1,0 +1,123 @@
+
+
+<style type="text/css">
+  
+  .control-label{
+    text-align: left !important;
+  }
+</style>
+            <!-- Page Content Holder -->
+            <div id="content">
+
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+
+                        <div class="navbar-header">
+                            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                                <i class="glyphicon glyphicon-align-left"></i>
+                                <span>Toggle Sidebar</span>
+                            </button>
+                        </div>
+
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="#">Page</a></li>
+                                <li><a href="#">Page</a></li>
+                                <li><a href="#">Page</a></li>
+                                <li><a href="#">Page</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+               <div class="container">
+               <p>
+                  <h2>Upload Files</h2>
+               </p>
+                  <div class="row">
+                   <div class="col-md-12" >
+                           <div class="line"></div>
+                                          
+                          <form class="form-horizontal" action="wb_trans_portfolio/extract_data"  enctype="multipart/form-data" method="POST">
+                            <div class="form-group">
+                              <label class="control-label col-sm-3" for="email">Upload PDF File</label>
+                              <div class="col-sm-4">
+                                <input type="file" name="pdf_file" required>
+                              </div>
+                               <div class="col-sm-2">
+                               <%=select_tag "num_of_page", options_for_select(get_num_list,4),:class=>'form-control',:required=>'required'%>
+                              </div>
+                              <div class="col-sm-3">
+                                    <button type="submit" class="btn btn-primary pull-left">Upload</button>
+                                  </div> 
+                            </div>
+                      
+                              <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
+                           </form>
+                         
+                        </div>
+                    <div class="col-md-12" >
+                           <div class="line"></div>
+                               
+                               <%= form_for 'trans_portfolio_index', url: wb_trans_portfolio_upload_trans_portfolio_index_path, :html=>{:enctype=>'multipart/form-data',:method=>'POST'} do |f| %>
+                                
+                                <p>
+                                  Supported File Format is Excel/CSV
+                                </p>
+                               
+                                <div class="form-group">
+
+                                  <label class="control-label col-sm-3"> Upload Transamerica Portfolio Index </label>
+                                  
+                                  <div class="col-sm-4">
+                                    <%=f.file_field 'file',:required=>'required'%>
+                                  </div>
+                                  <div class=" col-sm-2">
+                                  <%=f.text_field 'upload_code' ,:class=>'form-control',:placeholder=>'Upload Code'%>
+                                  </div>  
+                                   <div class="col-sm-3">
+                                    <button type="submit" class="btn btn-primary pull-left">Upload</button>
+                                  </div>                
+                                </div>            
+                              <%end%>   
+                        </div>
+                  </div>
+
+                  <div class="row" style="margin-bottom: 100px;">
+                    <div class="col-md-12" >
+                           <div class="line"></div>
+
+                               <%= form_for 'trans_portfolio', url: wb_trans_portfolio_upload_trans_portfolio_path,
+                                :html=>{:enctype=>'multipart/form-data',:method=>'POST'} do |f| %>
+                                <p>
+                                 Supported FIle Format are Excel, CSV, xls, xlxs, PDF 
+                                </p>
+                                <div class="form-group">
+
+                                  <label class="control-label col-sm-3"> Upload Transamerica Portfolio File </label>
+                                  
+                                  <div class="col-sm-4">
+                                    <%=f.file_field 'file',:required=>'required' %>
+                                  </div>
+                                  <div class=" col-sm-2">
+                                  <%=f.text_field 'upload_code',:class=>'form-control' ,:placeholder=>'Upload Code'%>
+                                  </div>
+                                   <div class="col-sm-3">
+                                    <button type="submit" class="btn btn-primary pull-left">Upload</button>
+                                  </div>                
+                                </div>
+                               <%end%>
+                        </div>
+                  </div>
+              </div>
+
+
+
+               
+            </div>
+     
+
+
+
+
+

@@ -1,0 +1,2 @@
+module WbTransPortfolioHelper
+end

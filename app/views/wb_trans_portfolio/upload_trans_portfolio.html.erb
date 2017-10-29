@@ -1,0 +1,232 @@
+ 
+<style type="text/css">
+    .sub_account_found{
+        background: green;
+        color: white;
+
+    }
+    .sub_account_not_found{
+        background: red;
+        color: white;
+        font-weight: bold;
+    }
+    .edit-subaccount:hover , .add-subaccount:hover, .edit-excel:hover{
+        cursor: pointer;
+
+    }
+    .margin{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 20px;
+    }
+    .w3-teal{
+        background-color: #7386D5 !important;
+    }
+
+</style>
+
+ <div id="content">
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+            <div class="navbar-header">
+                <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                    <i class="glyphicon glyphicon-align-left"></i>
+                    <span>Toggle Sidebar</span>
+                </button>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Page</a></li>
+                    <li><a href="#">Page</a></li>
+                    <li><a href="#">Page</a></li>
+                    <li><a href="#">Page</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                
+                <table class="table table-bordered">
+                    <thead>
+                        <th> Status</th>
+                        <th> Portfolio Name</th>
+                        <th>Incep Date</th>
+                        <th>1 Month  </th>
+                        <th>YTD</th>
+                        <th> 1 YR</th>
+                        <th>3 YR </th>
+                        <th>5 YR</th>
+                        <th>10 YR </th>
+                        <th>Since Incep.</th>                 
+                    </thead>
+                    <tbody>
+                        <% @data.each_with_index do |row,index|%>
+                            <% tr_class= 'sub_account_not_found' if row[0] ==false%>
+                            <% tr_class= 'sub_account_found' if row[0] ==true%>
+                            <tr class="<%=tr_class%>" id = "sub_account_id_<%=index%>">
+                                <td>
+                                    <%= 'OK' if row[0] ==true %>
+                                    <%= 'N/A' if row[0] ==false%>
+                                </td>
+                                <td>
+                                <%=row[1]%> 
+                                <%if row[0] ==false %>
+                                 <div class="pull-right"> 
+                                 <span style= "margin-right: 10px;" title="Edit Sub Account Discription in Excel" class=" edit-excel glyphicon glyphicon-file"></span>  
+                                 <span style= "margin-right: 10px;" title="Add new Sub Account Portfolio Index" class="add-subaccount glyphicon glyphicon-plus" data-id="<%=index%>">                
+                                </span>
+                                 <span title=" Update Sub Account Portfolio Index " class="edit-subaccount glyphicon glyphicon-pencil" data-id="<%=index%>"></span>
+                                 </div>
+                                <%end%>
+                                </td>
+                                 <% for i in 2..row.length-1 %>
+                                    <td><%=row[i]%></td>
+                                 <%end%>
+                            </tr>
+                        <%end%>
+                    </tbody>
+                    </body>  
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <div id="edit_subaccount_form" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom">
+      <header class="w3-container w3-teal"> 
+        <span onclick="document.getElementById('edit_subaccount_form').style.display='none'" 
+        class="w3-button w3-display-topright">&times;</span>
+        <h2>Edit Sub Account Index</h2>
+      </header>
+      <div class="w3-container">
+        <%=form_for 'sub_account', url: wb_trans_portfolio_update_subaccount_index_path, :html=>{:class=>''},:remote=>true do |f|%>
+            <div class="margin">
+                <%=f.label 'Select Sub Account' %>
+                <div >
+                    <%=f.select 'old_subaccount_id', WbVaTransPortnameIndex.active.collect {|p| [ p.name, p.id ]},{ include_blank: true},:required=>'required' %>       
+                </div>      
+            </div>
+            <div class="margin"class="margin">
+                <%=f.label 'Update Sub Account Discription' %>
+                <div >
+                    <%=f.text_field 'new_subaccount_name',:style=>'width: 50%;'   %>       
+                </div>      
+            </div>
+            <div class="margin" >
+                <%=f.label 'Comment' %> 
+                <div>
+                <%=f.text_area 'comment'  %>  
+                </div>     
+            </div>
+            <%=f.hidden_field 'row_id', :id=>'row_id' %>
+         
+            <div class="margin">
+                 <%=f.submit%>
+            </div>
+
+         <%end%>
+                    
+      </div>
+      <footer class="w3-container w3-teal">
+        <p>Modal Footer</p>
+      </footer>
+    </div>
+  </div>
+
+  <div id="add_subaccount_form" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom">
+      <header class="w3-container w3-teal"> 
+        <span onclick="document.getElementById('add_subaccount_form').style.display='none'" 
+        class="w3-button w3-display-topright">&times;</span>
+        <h2>Add New Sub Account Index</h2>
+      </header>
+      <div class="w3-container">
+
+          <%=form_for 'add_sub_account', url: wb_trans_portfolio_create_subaccount_index_path, :html=>{:class=>''},:remote=>true do |f|%>
+
+            <div class="margin"class="margin">
+                <%=f.label 'Sub Account Index ' %>
+                <div>
+                    <%=f.text_field 'new_subaccount_name', :style=>'width: 50%;'  %>       
+                </div>      
+            </div>
+
+            <div class="margin">
+                <%=f.label 'Comment' %> 
+                <div>
+                    <%=f.text_area 'comment'  %>  
+                </div>     
+            </div>
+
+            <%=f.hidden_field 'row_id', :id=>'row_id_add' %>
+
+            <div class="margin">
+                 <%=f.submit%>
+            </div>
+         <%end%>     
+      </div>
+
+      <footer class="w3-container w3-teal">
+            <p>Modal Footer</p>
+      </footer>
+    </div>
+  </div>
+
+
+    <div id="alert_msg" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom">
+      <header class="w3-container w3-teal"> 
+        <span onclick="document.getElementById('alert_msg').style.display='none'" 
+        class="w3-button w3-display-topright">&times;</span>
+        <h2>Add New Sub Account Index</h2>
+      </header>
+      <div class="w3-container">
+      <p style="margin:20px;">
+        If You think this discription is not extracted properly from pdf, then edit the discription in excel file and upload Again.  
+      </p>
+        
+      </div>
+
+      <footer class="w3-container w3-teal">
+            <p>Modal Footer</p>
+      </footer>
+    </div>
+  </div>
+
+<script type="text/javascript">
+    
+$(document).ready(function(){
+    $('.edit-subaccount').on('click',function(){
+        $('#edit_subaccount_form').css('display','block');
+        $('#row_id').val($(this).data('id'));
+        var name = $.trim($($(this).closest('tr').children()[1]).text());
+        $("#sub_account_new_subaccount_name").val(name);
+
+    });
+
+    $('.add-subaccount').on('click',function(){
+        $('#add_subaccount_form').css('display','block');
+        $('#row_id_add').val($(this).data('id'));
+        var name = $.trim($($(this).closest('tr').children()[1]).text());
+        $("#add_sub_account_new_subaccount_name").val(name);
+
+    });
+
+    $('.edit-excel').on('click',function(){
+        $('#alert_msg').css('display','block');
+
+
+
+    });
+});
+
+</script>
+
+ 
